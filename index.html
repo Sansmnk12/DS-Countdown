@@ -76,20 +76,8 @@ function render(){
   } else {
      el.status.textContent = "Upcoming";
      updateDigits(diff);
-     if (diff <= 0) {
-  // Event started or ended
-  el.bar.style.width = "100%";
-} else {
-  // Show how much of the countdown has passed
-  if (initialRemainingMs === null) {
-    initialRemainingMs = Math.max(1, start - now);
-  }
-  let p = 1 - (diff / initialRemainingMs);
-  if (p < 0) p = 0;
-  if (p > 1) p = 1;
-  el.bar.style.width = (p * 100).toFixed(2) + "%";
-}
-
+     const secPart = 1 - ((diff/1000)%60)/60;
+     el.bar.style.width = (secPart*100).toFixed(2) + "%";
   }
 }
 let raf; function tick(){render(); raf=requestAnimationFrame(tick);}
@@ -98,7 +86,3 @@ setInterval(()=>{ if (ACTIVATIONS.length<2) return; el.card.classList.add('hidde
 </script>
 </body>
 </html>
-    // Reset the baseline for the new activation
-    const a = ACTIVATIONS[idx];
-    currentStartMs = new Date(a.startsAt).getTime();
-    initialRemainingMs = Math.max(1, currentStartMs - Date.now());
