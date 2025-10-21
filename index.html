@@ -25,6 +25,14 @@
   .lbl{color:var(--muted);margin-top:8px;font-size:clamp(12px,1.6vw,16px);}
   .progress{height:10px;border-radius:999px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);overflow:hidden;margin:20px 0 10px;}
   .bar{height:100%;width:0;background:linear-gradient(90deg,var(--accent),var(--accent2));}
+
+/* --- Hamburger menu icon (three strips) --- */
+.hamb{display:inline-flex;flex-direction:column;justify-content:center;align-items:center;
+  width:36px;height:30px;background:transparent;border:0;cursor:pointer;gap:4px;margin-right:8px;}
+.hamb .line{display:block;width:22px;height:2px;background:var(--text);opacity:.9;border-radius:2px;}
+.hamb:hover .line{opacity:1;}
+@media (min-width:1400px){ .hamb{width:40px;height:34px} .hamb .line{width:24px} }
+
 </style>
 </head>
 <body>
@@ -34,7 +42,7 @@
   <div class="wrap">
     <div class="card" id="card">
       <div class="row">
-        <button class="tag" id="switcher" title="Tap to switch / open list">Switch</button>
+        <button id="hamb" class="hamb" aria-label="Menu" title="Open menu"><span class="line"></span><span class="line"></span><span class="line"></span></button>
         <span class="tag" id="tag">1/17</span>
         <span class="status" id="status">Upcoming</span>
       </div>
@@ -64,17 +72,7 @@
   </div>
 
 <script>
-const ACTIVATIONS = [{"zone": "AlBujairi", "name": "Diriyah Freestyle Chess Grand Slam", "startsAt": "2026-02-05T18:00:00"}, {"zone": "AlBujairi", "name": "Diriyah Storytelling Festival", "startsAt": "2025-11-16T18:00:00"}, {"zone": "AlBujairi", "name": "Japan & Saudi Event", "startsAt": "2025-11-03T18:00:00"}, {"zone": "Minzal", "name": "Sloom AlBadia Experience", "startsAt": "2026-01-01T18:00:00"}, {"zone": "Al-Murrayeh \"Layali AlDiriyah\"", "name": "Layali Diriyah", "startsAt": "2025-11-01T18:00:00"}, {"zone": "Adhwaihrah", "name": "General Area", "startsAt": "2025-12-15T18:00:00"}, {"zone": "Adhwaihrah", "name": "Al-Huwayett", "startsAt": "2025-12-15T18:00:00"}, {"zone": "Adhwaihrah", "name": "Msalliyah", "startsAt": "2026-01-04T18:00:00"}, {"zone": "Wadi Safar", "name": "Opening Ceremony", "startsAt": "2025-10-31T18:00:00"}, {"zone": "Wadi Safar", "name": "Sada Alwadi Samri Exhibition 7+1 Musical Nights", "startsAt": "2025-12-04T18:00:00"}, {"zone": "AlTawalie", "name": "Souq AlMawasem (Japanese)", "startsAt": "2025-11-07T16:00:00"}, {"zone": "At-Turaif", "name": "Hal AlQusoor", "startsAt": "2025-11-01T18:00:00"}, {"zone": "At-Turaif", "name": "Tyn Festival TAG", "startsAt": "2026-01-01T18:00:00"}, {"zone": "At-Turaif", "name": "History Exhibition", "startsAt": "2026-01-01T18:00:00"}, {"zone": "Samhan & Shamalat", "name": "AlSamhan Activations During weekends", "startsAt": "2025-11-06T18:00:00"}, {"zone": "Bab Samhan", "name": "Season Press Conference", "startsAt": "2025-10-18T18:00:00"}, {"zone": "EOC", "name": "opening ceremony", "startsAt": "2025-09-08T18:00:00"}];
-
-// --- Runtime safety: force Souq AlMawasem (Japanese) to 7 Nov 2025 16:00 ---
-if (Array.isArray(ACTIVATIONS)) {
-  for (const a of ACTIVATIONS) {
-    if ((a.zone||'')==='AlTawalie' && (a.name||'').includes('Souq AlMawasem (Japanese)')) {
-      a.startsAt = '2025-11-07T16:00:00';
-    }
-  }
-}
-
+const ACTIVATIONS = [{"zone": "AlBujairi", "name": "Diriyah Freestyle Chess Grand Slam", "startsAt": "2026-02-05T18:00:00"}, {"zone": "AlBujairi", "name": "Diriyah Storytelling Festival", "startsAt": "2025-11-16T18:00:00"}, {"zone": "AlBujairi", "name": "Japan & Saudi Event", "startsAt": "2025-11-03T18:00:00"}, {"zone": "Minzal", "name": "Sloom AlBadia Experience", "startsAt": "2026-01-01T18:00:00"}, {"zone": "Al-Murrayeh \"Layali AlDiriyah\"", "name": "Layali Diriyah", "startsAt": "2025-11-01T18:00:00"}, {"zone": "Adhwaihrah", "name": "General Area", "startsAt": "2025-12-15T18:00:00"}, {"zone": "Adhwaihrah", "name": "Al-Huwayett", "startsAt": "2025-12-15T18:00:00"}, {"zone": "Adhwaihrah", "name": "Msalliyah", "startsAt": "2026-01-04T18:00:00"}, {"zone": "Wadi Safar", "name": "Opening Ceremony", "startsAt": "2025-10-31T18:00:00"}, {"zone": "Wadi Safar", "name": "Sada Alwadi Samri Exhibition 7+1 Musical Nights", "startsAt": "2025-12-04T18:00:00"}, {"zone": "AlTawalie", "name": "Souq AlMawasem (Japanese)", "startsAt": "2025-11-09T18:00:00"}, {"zone": "At-Turaif", "name": "Hal AlQusoor", "startsAt": "2025-11-01T18:00:00"}, {"zone": "At-Turaif", "name": "Tyn Festival TAG", "startsAt": "2026-01-01T18:00:00"}, {"zone": "At-Turaif", "name": "History Exhibition", "startsAt": "2026-01-01T18:00:00"}, {"zone": "Samhan & Shamalat", "name": "AlSamhan Activations During weekends", "startsAt": "2025-11-06T18:00:00"}, {"zone": "Bab Samhan", "name": "Season Press Conference", "startsAt": "2025-10-18T18:00:00"}, {"zone": "EOC", "name": "opening ceremony", "startsAt": "2025-09-08T18:00:00"}];
 const ROTATE = 30000, FADE = 1200, LIVE = 2*60*60*1000;
 const el = {
   card:document.getElementById('card'), tag:document.getElementById('tag'), status:document.getElementById('status'),
@@ -88,9 +86,7 @@ function updateDigits(diffMs){let s=Math.max(0,Math.floor(diffMs/1000));const d=
 function render(){
   const a = ACTIVATIONS[idx];
   el.tag.textContent = (idx+1)+"/"+ACTIVATIONS.length;
-  
-  if (document.getElementById('switcher')) { document.getElementById('switcher').textContent = (ACTIVATIONS[idx].zone || '—'); }
-el.zone.textContent = a.zone || "—";
+  el.zone.textContent = a.zone || "—";
   el.title.textContent = a.name || "—";
   el.when.textContent = "Starts at " + fmt(a.startsAt);
   const now = Date.now(), start = new Date(a.startsAt).getTime(), diff = start - now;
@@ -109,48 +105,62 @@ let raf; function tick(){render(); raf=requestAnimationFrame(tick);}
 tick();
 setInterval(()=>{ if (ACTIVATIONS.length<2) return; el.card.classList.add('hidden'); setTimeout(()=>{ idx=(idx+1)%ACTIVATIONS.length; el.card.classList.remove('hidden'); }, FADE); }, ROTATE);
 
-// --- Activation switcher (uses the "tag" style button) ---
-const switcherBtn = document.getElementById('switcher');
-const menu = document.getElementById('menu');
-const menuMask = document.getElementById('menuMask');
-const menuClose = document.getElementById('menuClose');
-const menuList = document.getElementById('menuList');
-
-function closeMenu(){ menu.style.display='none'; menuMask.style.display='none'; }
-function openMenu(){ menu.style.display='block'; menuMask.style.display='block'; }
-
-function buildMenu(){
-  menuList.innerHTML = '';
-  ACTIVATIONS.forEach((a, i) => {
-    const item = document.createElement('button');
-    item.style.cssText = 'display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:12px 14px;border:none;background:transparent;color:#eee;cursor:pointer;border-radius:12px;';
-    item.onmouseenter = () => item.style.background = 'rgba(255,255,255,.06)';
-    item.onmouseleave = () => item.style.background = 'transparent';
-    item.onclick = () => {
-      idx = i;
-      // Reset progress baseline for new activation
-      const start2 = new Date(ACTIVATIONS[idx].startsAt).getTime();
-      currentStartMs = start2;
-      initialRemainingMs = Math.max(1, start2 - Date.now());
-      closeMenu();
-    };
-    const num = document.createElement('span');
-    num.className = 'tag';
-    num.textContent = (i+1).toString().padStart(2,'0');
-    const label = document.createElement('div');
-    label.innerHTML = `<div style="font-weight:700;">${a.zone||'-'}</div><div style="opacity:.8;font-size:12px;">${a.name||'-'}</div>`;
-    item.appendChild(num);
-    item.appendChild(label);
-    menuList.appendChild(item);
+// --- Hamburger opens activation list ---
+const hambBtn = document.getElementById('hamb');
+if (hambBtn){
+  hambBtn.addEventListener('click', () => {
+    if (typeof buildMenu==='function' && typeof openMenu==='function'){
+      buildMenu(); openMenu();
+    }
   });
 }
 
-if (switcherBtn){
-  switcherBtn.addEventListener('click', () => { buildMenu(); openMenu(); });
-}
-if (menuClose){ menuClose.addEventListener('click', closeMenu); }
-if (menuMask){ menuMask.addEventListener('click', closeMenu); }
 
+// --- Robust menu wiring (safe even if defined earlier) ---
+(function(){
+  const $ = (id) => document.getElementById(id);
+  const hamb = $('hamb');
+  const zone = $('zone');
+  let menu = $('menu'), menuMask = $('menuMask'), menuClose = $('menuClose'), menuList = $('menuList');
+
+  // Define helpers if not present
+  if (typeof openMenu !== 'function') {
+    window.openMenu = function(){ if(menu){menu.style.display='block';} if(menuMask){menuMask.style.display='block';} if(zone){zone.classList.add('active');} };
+  }
+  if (typeof closeMenu !== 'function') {
+    window.closeMenu = function(){ if(menu){menu.style.display='none';} if(menuMask){menuMask.style.display='none';} if(zone){zone.classList.remove('active');} };
+  }
+  if (typeof buildMenu !== 'function') {
+    window.buildMenu = function(){
+      if(!menuList) return;
+      menuList.innerHTML = '';
+      (ACTIVATIONS||[]).forEach((a,i)=>{
+        const btn = document.createElement('button');
+        btn.style.cssText='display:flex;gap:12px;align-items:center;width:100%;text-align:left;padding:12px 14px;border:none;background:transparent;color:#eee;cursor:pointer;border-radius:12px;';
+        btn.onmouseenter=()=>btn.style.background='rgba(255,255,255,.06)';
+        btn.onmouseleave=()=>btn.style.background='transparent';
+        btn.onclick=()=>{
+          idx=i;
+          const start2 = new Date(ACTIVATIONS[idx].startsAt).getTime();
+          if (typeof currentStartMs!=='undefined'){ currentStartMs=start2; }
+          if (typeof initialRemainingMs!=='undefined'){ initialRemainingMs=Math.max(1,start2-Date.now()); }
+          closeMenu();
+        };
+        const num=document.createElement('span'); num.className='tag'; num.textContent=(i+1).toString().padStart(2,'0');
+        const label=document.createElement('div'); label.innerHTML=`<div style="font-weight:700;">${a.zone||'-'}</div><div style="opacity:.8;font-size:12px;">${a.name||'-'}</div>`;
+        btn.appendChild(num); btn.appendChild(label); menuList.appendChild(btn);
+      });
+    };
+  }
+
+  if (hamb){ hamb.addEventListener('click', ()=>{ buildMenu(); openMenu(); }); }
+  if (zone){ zone.addEventListener('click', ()=>{ const visible = menu && menu.style.display==='block'; if (visible) closeMenu(); else { buildMenu(); openMenu(); } }); }
+  if (menuClose){ menuClose.addEventListener('click', closeMenu); }
+  if (menuMask){ menuMask.addEventListener('click', closeMenu); }
+})();
+
+// Fix Souq AlMawasem (Japanese) date at runtime
+try{(ACTIVATIONS||[]).forEach(a=>{if((a.zone||'')==='AlTawalie' && (a.name||'').includes('Souq AlMawasem (Japanese)')){a.startsAt='2025-11-07T16:00:00';}});}catch(e){}
 </script>
 </body>
 </html>
