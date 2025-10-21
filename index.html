@@ -28,10 +28,33 @@
 
 /* --- Hamburger menu icon (three strips) --- */
 .hamb{display:inline-flex;flex-direction:column;justify-content:center;align-items:center;
-  width:36px;height:30px;background:transparent;border:0;cursor:pointer;gap:4px;margin-right:8px;}
-.hamb .line{display:block;width:22px;height:2px;background:var(--text);opacity:.9;border-radius:2px;}
+  width:36px;height:30px;background:transparent;border:0;cursor:pointer;gap:4px;margin-right:8px;z-index:5;}
+.hamb .line{display:block;width:22px;height:2px;background:var(--text);opacity:.9;border-radius:2px;transition:all .3s ease;}
 .hamb:hover .line{opacity:1;}
-@media (min-width:1400px){ .hamb{width:40px;height:34px} .hamb .line{width:24px} }
+@media (max-width:900px){ .hamb{width:44px;height:38px;gap:6px;} .hamb .line{width:26px;height:3px;} }
+
+
+/* ===== Mobile-first responsive tweaks ===== */
+@media (max-width: 900px){
+  .card{ width:min(96vw, 980px); padding: clamp(14px, 4vw, 32px); border-radius:24px; }
+  .title{ font-size: clamp(28px, 8vw, 56px); }
+  .when{ font-size: clamp(14px, 4vw, 18px); }
+  .timer{ grid-template-columns: repeat(2, 1fr); gap: clamp(10px, 3vw, 16px); }
+  .block{ padding: clamp(12px, 3.5vw, 24px); border-radius:18px; }
+  .num{ font-size: clamp(42px, 16vw, 90px); }
+  .lbl{ font-size: clamp(11px, 3.5vw, 14px); }
+  .progress{ height: 6px; margin: 14px 0 6px; }
+  .status, .tag{ font-size: 11px; padding: 6px 10px; }
+  .row{ gap: 8px; }
+}
+@media (max-width: 540px){
+  .title{ font-size: clamp(24px, 9vw, 46px); }
+  .num{ font-size: clamp(36px, 18vw, 80px); }
+  .block{ padding: clamp(10px, 4vw, 18px); }
+  .card{ padding: clamp(12px, 5vw, 24px); }
+  .tag, .status, #menuClose, #hamb{ min-height: 44px; }
+  #menu{ top:10vh; width:min(96vw, 720px); }
+}
 
 </style>
 </head>
@@ -105,25 +128,13 @@ let raf; function tick(){render(); raf=requestAnimationFrame(tick);}
 tick();
 setInterval(()=>{ if (ACTIVATIONS.length<2) return; el.card.classList.add('hidden'); setTimeout(()=>{ idx=(idx+1)%ACTIVATIONS.length; el.card.classList.remove('hidden'); }, FADE); }, ROTATE);
 
-// --- Hamburger opens activation list ---
-const hambBtn = document.getElementById('hamb');
-if (hambBtn){
-  hambBtn.addEventListener('click', () => {
-    if (typeof buildMenu==='function' && typeof openMenu==='function'){
-      buildMenu(); openMenu();
-    }
-  });
-}
-
-
-// --- Robust menu wiring (safe even if defined earlier) ---
+// --- Robust menu wiring (desktop + mobile) ---
 (function(){
   const $ = (id) => document.getElementById(id);
   const hamb = $('hamb');
   const zone = $('zone');
   let menu = $('menu'), menuMask = $('menuMask'), menuClose = $('menuClose'), menuList = $('menuList');
 
-  // Define helpers if not present
   if (typeof openMenu !== 'function') {
     window.openMenu = function(){ if(menu){menu.style.display='block';} if(menuMask){menuMask.style.display='block';} if(zone){zone.classList.add('active');} };
   }
@@ -157,10 +168,21 @@ if (hambBtn){
   if (zone){ zone.addEventListener('click', ()=>{ const visible = menu && menu.style.display==='block'; if (visible) closeMenu(); else { buildMenu(); openMenu(); } }); }
   if (menuClose){ menuClose.addEventListener('click', closeMenu); }
   if (menuMask){ menuMask.addEventListener('click', closeMenu); }
+
+  // Lock body scroll on mobile when menu is open
+  const body = document.body;
+  if (menu && menuMask){
+    const lock = () => { body.style.overflow = 'hidden'; };
+    const unlock = () => { body.style.overflow = ''; };
+    const _open = openMenu, _close = closeMenu;
+    window.openMenu = function(){ _open(); lock(); };
+    window.closeMenu = function(){ _close(); unlock(); };
+  }
+
+  // Souq AlMawasem (Japanese) date correction (7 Nov 2025 16:00)
+  try{ (ACTIVATIONS||[]).forEach(a=>{ if((a.zone||'')==='AlTawalie' && (a.name||'').includes('Souq AlMawasem (Japanese)')){ a.startsAt='2025-11-07T16:00:00'; } }); }catch(e){}
 })();
 
-// Fix Souq AlMawasem (Japanese) date at runtime
-try{(ACTIVATIONS||[]).forEach(a=>{if((a.zone||'')==='AlTawalie' && (a.name||'').includes('Souq AlMawasem (Japanese)')){a.startsAt='2025-11-07T16:00:00';}});}catch(e){}
 </script>
 </body>
 </html>
