@@ -56,9 +56,34 @@
   #menu{ top:10vh; width:min(96vw, 720px); }
 }
 
+
+/* --- Center content perfectly on all devices --- */
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+}
+
+.main-wrapper {
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+
+#container, .main-content, .card {
+  margin: auto;
+}
+
 </style>
 </head>
 <body>
+  <div class="main-wrapper">
   <div id="bg"></div>
   <div id="ov"></div>
 
@@ -184,5 +209,6 @@ setInterval(()=>{ if (ACTIVATIONS.length<2) return; el.card.classList.add('hidde
 })();
 
 </script>
+  </div>
 </body>
 </html>
